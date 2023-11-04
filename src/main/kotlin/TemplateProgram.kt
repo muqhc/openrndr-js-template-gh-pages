@@ -1,10 +1,19 @@
-import org.openrndr.applicationAsync
-import org.openrndr.color.ColorRGBa
-import org.openrndr.color.rgb
-import kotlin.math.cos
+import org.openrndr.*
+import org.openrndr.color.*
+import org.openrndr.draw.*
+import org.openrndr.events.*
+import org.openrndr.math.*
+import org.openrndr.shape.*
+import kotlin.math.*
 
 suspend fun main() = applicationAsync {
+    configure {
+        title = "Your Title"
+    }
     program {
+
+        val urlParamMap = getUrlParamMap(js("window.location.search"))
+
         extend {
             val a = rgb("#ff0000")
             drawer.clear(a)
