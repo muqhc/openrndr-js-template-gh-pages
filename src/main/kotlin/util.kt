@@ -4,7 +4,6 @@ import org.openrndr.draw.*
 import org.openrndr.events.*
 import org.openrndr.math.*
 import org.openrndr.shape.*
-import org.openrndr.extra.compositor.*
 import kotlin.math.*
 
 
