@@ -8,9 +8,9 @@ import kotlin.math.*
 
 
 class Matrix22(
-    val c0r0: Double = 0.0
-    val c1r0: Double = 0.0
-    val c0r1: Double = 0.0
+    val c0r0: Double = 0.0,
+    val c1r0: Double = 0.0,
+    val c0r1: Double = 0.0,
     val c1r1: Double = 0.0
 ) : LinearType<Matrix22> {
 
