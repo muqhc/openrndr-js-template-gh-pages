@@ -88,7 +88,7 @@ class Alphabet15dotWriter(val drawer: Drawer, val defaultStyle: A15DWriteStyle =
                 fill = null
                 stroke = style.color
                 strokeWeight = style.weight
-                contours(contuorList)
+                contours(contourList)
             }
             
             cursor = originCursor + 0.0
