@@ -52,39 +52,45 @@ class Alphabet15dotWriter(val drawer: Drawer, val defaultStyle: A15DWriteStyle =
             cursorY = y
         }
 
-        fun writeLine(text: String) {
+        fun writeLine(text: String, dotMap: (Vector2)->Vector2 = { it }) {
             val originCursor = cursor + 0.0
+            val circleCenters = mutableListOf<Vector2>()
+            val contourList = mutableListOf<ShapeContour>()
             text.toList().forEach { c ->
                 (style.alphabet15dotMap[c] ?: alphabet15dotASCIIMap['$']!!).forEach { dL ->
                     if (dL.size == 1) {
                         val (x,y) = separateOneDigit(dL[0])
 
                         val rawPoint = Vector2(x.toDouble(), y.toDouble()) * style.scale
-                        val point = style.linearTransition * rawPoint + cursor
+                        val point = dotMap(style.linearTransition * rawPoint + cursor)
 
-                        drawer.apply {
-                            fill = style.color
-                            stroke = null
-                            circle(point, style.weight * style.dotScale)
-                        }
+                        circleCenters += point
                     }
                     else {
                         val dVL = dL.map {
                             val (x,y) = separateOneDigit(it)
-                            style.linearTransition * (Vector2(x.toDouble(), y.toDouble()) * style.scale) + cursor
+                            dotMap(style.linearTransition * (Vector2(x.toDouble(), y.toDouble()) * style.scale) + cursor)
                         }
                         val con = ShapeContour.fromPoints(dVL, closed = false)
-                        drawer.apply {
-                            fill = null
-                            stroke = style.color
-                            strokeWeight = style.weight
-                            contour(con)
-                        }
+                        contourList += con
                     }
                 }
                 if (!style.isCursorXTransiting) { cursorX += style.scale.x * (2 + style.charGap) }
                 else { cursor = cursor + (style.linearTransition * Vector2(style.scale.x * (2 + style.charGap), 0.0)) }
             }
+
+            drawer.apply {
+                fill = style.color
+                stroke = null
+                circles(circleCenters, style.weight * style.dotScale)
+            }
+            drawer.apply {
+                fill = null
+                stroke = style.color
+                strokeWeight = style.weight
+                contours(contuorList)
+            }
+            
             cursor = originCursor + 0.0
             if (!style.isCursorYTransiting) { cursorY += style.scale.y * (4 + style.lineGap) }
             cursor = cursor + (style.linearTransition * Vector2(0.0, style.scale.y * (4 + style.lineGap)))
